@@ -55,7 +55,7 @@ public:
         n = 0;
     }
     ~OctreeNode(){
-        //cerr<<"gg"<<" "<<n<<endl;
+        
     }
     uint32_t son[8];
     BoundingBox3f bbox;
@@ -71,17 +71,6 @@ public:
         plist = new OctreeNode[3*k];
         build(root, 0, m_mesh, m_mesh->getBoundingBox(), tri, k, 1);
         cerr<<"built "<<tot<<endl;
-        //check(root);
-    }
-    void check(uint32_t rt){
-        cerr<<rt<<endl;
-        if(plist[rt].n)
-            for(uint32_t i=0;i<plist[rt].n;i++)cerr<<plist[rt].tri[i]<<" ";
-        cerr<<endl;
-        for(uint32_t i = 0; i < 8; i++)
-            if(plist[rt].son[i] != 0){
-                check(plist[rt].son[i]);
-            }
     }
     void build(uint32_t &rt, uint32_t fa, Mesh *m_mesh, BoundingBox3f m_bbox, uint32_t *a, uint32_t n, uint32_t depth){
         if(n <= 10 || depth > 50){
@@ -129,17 +118,25 @@ public:
         }
     }
     bool Intersect(uint32_t rt, Ray3f &ray, Intersection &its, bool shadowRay, Mesh *m_mesh, uint32_t &f, bool &foundIntersection){
-        for(uint32_t i = 0; i < 8; i++)
+        std::pair<float,uint32_t>srt[10];
+        uint32_t inTot=0;
+        for(uint32_t i = 0; i < 8; i++){
             if(plist[rt].son[i] != 0){
-                if(!plist[plist[rt].son[i]].bbox.rayIntersect(ray))continue;
-                //cerr<<"Tab";
-                bool tg = Intersect(plist[rt].son[i], ray, its, shadowRay, m_mesh, f, foundIntersection);
+                float nearT, farT;
+                bool tg = plist[plist[rt].son[i]].bbox.rayIntersect(ray,nearT,farT);
+                if(tg)srt[inTot++]=std::pair<float,uint32_t>(nearT,i);
+            }
+        }
+        std::sort(srt,srt+inTot);
+        for(uint32_t i = 0; i < inTot; i++)
+            if(plist[rt].son[srt[i].second] != 0){
+                if(ray.maxt < srt[i].first)break;
+                bool tg = Intersect(plist[rt].son[srt[i].second], ray, its, shadowRay, m_mesh, f, foundIntersection);
                 if(tg)return true;
             }
         if(plist[rt].n){
             for(uint32_t idx = 0; idx < plist[rt].n; idx++){
                 float u, v, t;
-                //cerr<<"Damit";
                 if (m_mesh->rayIntersect(plist[rt].tri[idx], ray, u, v, t)) {
                     if (shadowRay)
                         return true;
@@ -148,7 +145,6 @@ public:
                     its.mesh = m_mesh;
                     f = plist[rt].tri[idx];
                     foundIntersection = true;
-                    //cerr<<"Congratulations";
                 }
             }
         }
@@ -156,7 +152,6 @@ public:
     }
     bool rayIntersect(Ray3f &ray, Intersection &its, bool shadowRay, Mesh *m_mesh, uint32_t &f, bool &foundIntersection){
         bool tg=Intersect(root, ray, its, shadowRay, m_mesh, f, foundIntersection);
-        //cerr<<foundIntersection;
         return tg;
     }
     ~Octree(){
