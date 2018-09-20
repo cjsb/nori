@@ -26,10 +26,12 @@ void Accel::addMesh(Mesh *mesh) {
         throw NoriException("Accel: only a single mesh is supported!");
     m_mesh = mesh;
     m_bbox = m_mesh->getBoundingBox();
+    //FactorialN start to change things here in Assignment2
+    m_ocTree = new Octree(m_mesh, m_bbox);
 }
 
 void Accel::build() {
-    /* Nothing to do here for now */
+    /* There is nothing to be done now. */
 }
 
 bool Accel::rayIntersect(const Ray3f &ray_, Intersection &its, bool shadowRay) const {
@@ -39,11 +41,12 @@ bool Accel::rayIntersect(const Ray3f &ray_, Intersection &its, bool shadowRay) c
     Ray3f ray(ray_); /// Make a copy of the ray (we will need to update its '.maxt' value)
 
     /* Brute force search through all triangles */
+    /*
     for (uint32_t idx = 0; idx < m_mesh->getTriangleCount(); ++idx) {
         float u, v, t;
         if (m_mesh->rayIntersect(idx, ray, u, v, t)) {
-            /* An intersection was found! Can terminate
-               immediately if this is a shadow ray query */
+             An intersection was found! Can terminate
+               immediately if this is a shadow ray query 
             if (shadowRay)
                 return true;
             ray.maxt = its.t = t;
@@ -52,7 +55,11 @@ bool Accel::rayIntersect(const Ray3f &ray_, Intersection &its, bool shadowRay) c
             f = idx;
             foundIntersection = true;
         }
-    }
+    }*/
+    // FactorialN: Add Octree using here.
+    //cerr<<"F";
+    bool tg = m_ocTree->rayIntersect(ray, its, shadowRay, m_mesh, f, foundIntersection);
+    if(tg)return true;
 
     if (foundIntersection) {
         /* At this point, we now know that there is an intersection,
