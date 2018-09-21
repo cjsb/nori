@@ -52,6 +52,7 @@
         "condition_variable": "cpp",
         "thread": "cpp",
         "cfenv": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "complex": "cpp"
     }
 }

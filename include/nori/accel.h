@@ -66,15 +66,14 @@ class Octree{
 public: 
     Octree(Mesh *m_mesh, BoundingBox3f &m_bbox){tot=0;
         uint32_t k = m_mesh->getTriangleCount();
-        tri = new uint32_t[k];
+        tri = new uint32_t[k];sm=0;
         for(uint32_t i=0; i<k; i++)tri[i]=i;
         plist = new OctreeNode[3*k];
         build(root, 0, m_mesh, m_mesh->getBoundingBox(), tri, k, 1);
-        cerr<<"built "<<tot<<endl;
     }
     void build(uint32_t &rt, uint32_t fa, Mesh *m_mesh, BoundingBox3f m_bbox, uint32_t *a, uint32_t n, uint32_t depth){
         if(n <= 10 || depth > 50){
-            rt = ++tot;
+            rt = ++tot;sm+=n;
             plist[tot]=OctreeNode(a, n);
             return;
         }
@@ -100,6 +99,7 @@ public:
         for(uint32_t i = 0; i < 8; i++){
             BoundingBox3f result(cen);
             result.expandBy(ExtendingBox[i]);
+            BoundingBox3f rsult=result;
             c[0]=0;
             for(uint32_t idx = 0; idx < n; idx++){
                 if(usd[idx])continue;
@@ -107,13 +107,14 @@ public:
                 if(result.overlaps(bdb)){
                     c[0]++;
                     c[c[0]] = a[idx];
+                    rsult.expandBy(bdb);
                     usd[idx] = 1;
                 }
             }
             if(c[0]){
                 uint32_t *b = new uint32_t[c[0]];
                 for(uint32_t idx = 1; idx <= c[0]; idx++) b[idx-1] = c[idx];
-                build(plist[rt].son[i], rt, m_mesh, result, b, c[0], depth + 1);
+                build(plist[rt].son[i], rt, m_mesh, rsult, b, c[0], depth + 1);
             }
         }
     }
@@ -159,7 +160,7 @@ public:
     }
 private:
     OctreeNode *plist;
-    uint32_t tot;
+    uint32_t tot, sm;
     uint32_t root;
     uint32_t *tri;
 };
