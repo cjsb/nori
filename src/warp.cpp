@@ -87,12 +87,12 @@ float Warp::squareToCosineHemispherePdf(const Vector3f &v) {
 
 
 Vector3f Warp::squareToBeckmann(const Point2f &sample, float alpha) {
-    float theta=sample.x()*PI/2.0,phi=sample.y()*PI*2.0;
-    return Vector3f(sin(theta)*cos(phi),sin(theta)*sin(phi),cos(theta));
+    throw("Haven't done.");
+    //TO_DO
 }
 float Warp::squareToBeckmannPdf(const Vector3f &m, float alpha) {
-    float theta=m.x()*PI/2.0,phi=m.y()*PI*2.0,costheta=cos(theta);
-    return 1/(2.0*PI)*(2*exp(-squDiskPdf(tan(theta)/alpha))/(alpha*alpha*costheta*costheta*costheta));
+    throw("Haven't done.");
+    //TO_DO
 }
 
 NORI_NAMESPACE_END
