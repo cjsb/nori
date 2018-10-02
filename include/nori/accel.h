@@ -133,7 +133,7 @@ public:
             if(plist[rt].son[srt[i].second] != 0){
                 if(ray.maxt < srt[i].first)break;
                 bool tg = Intersect(plist[rt].son[srt[i].second], ray, its, shadowRay, m_mesh, f, foundIntersection);
-                if(tg)return true;
+                if(shadowRay&&tg)return true;
             }
         if(plist[rt].n){
             for(uint32_t idx = 0; idx < plist[rt].n; idx++){

@@ -21,16 +21,16 @@ NORI_NAMESPACE_BEGIN
             if (!scene->rayIntersect(ray, its))
                 return Color3f(0.0f);
 
-            Normal3f n = its.shFrame.n.cwiseAbs();
-            Vector3f x = ray.o+ray.d*its.t;
+            Normal3f n = its.shFrame.n;
+            Vector3f x = its.p;
             Color3f Lt = Color3f(0.0f,0.0f,0.0f);
-            for(int k=0;k<2;k++){
+            uint32_t tms = 1;
+            for(uint32_t k=0;k<tms;k++){
                 Vector3f dx = generaTor->squareToCosineHemisphere(Point2f(drand48(),drand48()));
-                Frame localFrame = Frame(n);
-                Vector3f d = localFrame.toWorld(dx);
-                float tg = 1;
-                if(scene->rayIntersect(Ray3f(x,d)))tg=0;
-                Lt += Color3f(1.0f,1.0f,1.0f)*tg/3.0f;
+                Vector3f d = its.toWorld(dx);
+                float tg = 1.0/tms;
+                if(scene->rayIntersect(Ray3f(x,d,1e-4,20)))tg=0;
+                Lt += Color3f(0.95f,0.95f,0.95f)*tg;
             }
             return Lt;
         }

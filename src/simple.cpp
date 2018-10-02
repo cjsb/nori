@@ -22,14 +22,14 @@ NORI_NAMESPACE_BEGIN
             if (!scene->rayIntersect(ray, its))
                 return Color3f(0.0f);
 
-            Normal3f n = its.shFrame.n.cwiseAbs();
-            Vector3f x = ray.o+ray.d*its.t;
+            Normal3f n = its.shFrame.n;
+            Vector3f x = its.p;
             Vector3f d = lightPoint - x;
-            float lenD=sqrt(d.x()*d.x()+d.y()*d.y()+d.z()*d.z());
-            float lenN=sqrt(n.x()*n.x()+n.y()*n.y()+n.z()*n.z());
-            float cosTHETA = (d.x()*n.x()+d.y()*n.y()+d.z()*n.z())/(lenD*lenN);
-            float tg = 1;
-            if(scene->rayIntersect(Ray3f(x,d,1e-5,1.0f-1e-5)))tg=0;
+            float lenD=sqrt(d.dot(d));
+            d/=lenD;
+            float cosTHETA = n.dot(d);
+            float tg = !scene->rayIntersect(Ray3f(x,d,1e-4,lenD-1e-4));
+            
             Color3f Lt = EmiC/(4*PI*PI)*fmax(0.0f,cosTHETA)/(lenD*lenD)*tg;
             return Lt;
         }
