@@ -32,6 +32,10 @@ public:
      * \brief Return the type of object (i.e. Mesh/Emitter/etc.) 
      * provided by this instance
      * */
+    virtual void activate() = 0;
+    virtual Color3f getEmit() const = 0;
+    virtual void activate(MatrixXf &V, MatrixXf &N, MatrixXu &F, uint32_t ns) = 0;
+    virtual void samplePosition(Point2f sample, Point3f &p, Normal3f &n) = 0;
     EClassType getClassType() const { return EEmitter; }
 };
 

@@ -2896,6 +2896,9 @@
 		<Unit filename="/Users/factorialn/CLionProjects/nori/src/ao.cpp">
 			<Option target="nori"/>
 		</Unit>
+		<Unit filename="/Users/factorialn/CLionProjects/nori/src/area.cpp">
+			<Option target="nori"/>
+		</Unit>
 		<Unit filename="/Users/factorialn/CLionProjects/nori/src/bitmap.cpp">
 			<Option target="nori"/>
 		</Unit>

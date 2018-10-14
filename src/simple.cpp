@@ -11,8 +11,8 @@ NORI_NAMESPACE_BEGIN
     public:
         SimpleIntegrator(const PropertyList &props) {
             /* No parameters this time */
-            lightPoint=props.getPoint("position");
-            EmiC=props.getColor("energy");
+            lightPoint = props.getPoint("position");
+            EmiC = props.getColor("energy");
         }
 
         /*FactorialN did this in PA3.*/

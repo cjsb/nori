@@ -38,6 +38,9 @@ void Mesh::activate() {
         m_bsdf = static_cast<BSDF *>(
             NoriObjectFactory::createInstance("diffuse", PropertyList()));
     }
+    if (m_emitter != nullptr){
+        m_emitter->activate(m_V, m_N, m_F, getTriangleCount());
+    }
 }
 
 float Mesh::surfaceArea(uint32_t index) const {

@@ -53,6 +53,7 @@
         "thread": "cpp",
         "cfenv": "cpp",
         "utility": "cpp",
-        "complex": "cpp"
+        "complex": "cpp",
+        "iosfwd": "cpp"
     }
 }
