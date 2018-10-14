@@ -32,6 +32,7 @@ public:
      * \brief Return the type of object (i.e. Mesh/Emitter/etc.) 
      * provided by this instance
      * */
+    virtual float Pdf() const = 0;
     virtual void activate() = 0;
     virtual Color3f getEmit() const = 0;
     virtual void activate(MatrixXf &V, MatrixXf &N, MatrixXu &F, uint32_t ns) = 0;
