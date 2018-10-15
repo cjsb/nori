@@ -111,7 +111,9 @@ public:
             bRec.wo = Warp::squareToCosineHemisphere(sp);
         }
         if(Frame::cosTheta(bRec.wi) <= 0.0f) return Color3f(0.0f);
-        return eval(bRec) * Frame::cosTheta(bRec.wo) / pdf(bRec);
+        float PDF = pdf(bRec);
+        if(PDF > 0)return eval(bRec) * Frame::cosTheta(bRec.wo) / PDF;
+        else return Color3f(0.0f);
     }
 
     bool isDiffuse() const {

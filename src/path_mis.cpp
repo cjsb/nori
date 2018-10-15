@@ -65,9 +65,11 @@ NORI_NAMESPACE_BEGIN
             
                 bRec = BSDFQueryRecord(its.shFrame.toLocal(-ray.d), its.shFrame.toLocal(dn), ESolidAngle);
                 Color3f dcolor = bsdf->eval(bRec);
-                pl = fmax(1e-5, chsdEmitter->Pdf() * emitterPDF * dis * dis / (-n.dot(dn)));
+                
+                pl = chsdEmitter->Pdf() * emitterPDF * dis * dis / (-n.dot(dn));
                 pb = bsdf->pdf(bRec);
-                res = Lt * dcolor * pl / (pb + pl);
+                if(pl > 0 && n.dot(dn) < 0)res = Lt * dcolor * pl / (pb + pl);
+                else res = Lt * dcolor;
             }
             if(drand48() < 0.95){
                 Color3f xcolor = bsdf->sample(bRec, Point2f(drand48(), drand48()));
