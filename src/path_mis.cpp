@@ -45,7 +45,7 @@ NORI_NAMESPACE_BEGIN
             if (emitter != nullptr){
                 res = emitter->getEmit();
                 if(diff){
-                    pl = 1.0 / emitter->Pdf() / lightSum * its.t * its.t;
+                    pl = 1.0 * emitter->Pdf() / lightSum * its.t * its.t;
                     res *= pb / (pb + pl) ;
                 }
                 bRec = BSDFQueryRecord(its.shFrame.toLocal(-ray.d));
