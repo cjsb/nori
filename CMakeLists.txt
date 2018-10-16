@@ -92,7 +92,6 @@ add_executable(nori
   src/area.cpp
   src/whitted.cpp
   src/path_ems.cpp
-  src/path_mats.cpp
   src/path_mis.cpp
 )
 
